@@ -10,20 +10,15 @@ import streamlit as st
 import matplotlib.font_manager as fm
 import platform
 
-if platform.system() == "Darwin":  #
-    plt.rc("font", family="AppleGothic")
-else:
-    plt.rc("font", family="NanumGothic")
+FONT_PATH = os.path.join(os.path.dirname(__file__), 'fonts', 'NanumGothic.ttf')
+if not os.path.exists(FONT_PATH):
+    raise FileNotFoundError(f"한글 폰트 파일을 찾을 수 없습니다: {FONT_PATH}")
 
-fe = fm.FontEntry(
-    fname=r"/usr/share/fonts/truetype/nanum/NanumGothic.ttf",  # ttf 파일이 저장되어 있는 경로
-    name="NanumGothic",
-)  # 원하는 폰트 설정
-fm.fontManager.ttflist.insert(0, fe)  # Matplotlib에 폰트 추가
-
-plt.rcParams.update({"font.size": 18, "font.family": "NanumGothic"})  # 폰트 설정
-
-plt.rcParams["axes.unicode_minus"] = False
+#matplotlib에 폰트 등록 및 기본 폰트로 설정
+fm.fontManager.addfont(FONT_PATH)
+font_name = fm.FontProperties(fname=FONT_PATH).get_name()
+plt.rcParams['font.family'] = font_name
+plt.rcParams['axes.unicode_minus'] = False  # 음수 기호 깨짐 방지
 
 #2. 데이터 호출 및 일데이터 추출, 프레임화
 df = pd.read_csv('data_울산_2024.csv', encoding="cp949")
