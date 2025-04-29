@@ -7,6 +7,20 @@ from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
 from sklearn.metrics import r2_score
 import streamlit as st
+if platform.system() == "Darwin":  #
+    plt.rc("font", family="AppleGothic")
+else:
+    plt.rc("font", family="NanumGothic")
+
+fe = fm.FontEntry(
+    fname=r"/usr/share/fonts/truetype/nanum/NanumGothic.ttf",  # ttf 파일이 저장되어 있는 경로
+    name="NanumGothic",
+)  # 원하는 폰트 설정
+fm.fontManager.ttflist.insert(0, fe)  # Matplotlib에 폰트 추가
+
+plt.rcParams.update({"font.size": 18, "font.family": "NanumGothic"})  # 폰트 설정
+
+plt.rcParams["axes.unicode_minus"] = False
 
 #2. 데이터 호출 및 일데이터 추출, 프레임화
 df = pd.read_csv('data_울산_2024.csv', encoding="cp949")
