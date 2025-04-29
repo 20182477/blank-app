@@ -118,10 +118,23 @@ from sklearn.metrics import r2_score
 st.title("울산 탁도 예측 대시보드")
 
 # 데이터 로드 & 전처리
-df = pd.read_csv('data_울산_2024.csv', encoding='cp949', parse_dates=True)
-date_col = next(c for c in df.columns if pd.api.types.is_datetime64_any_dtype(df[c]))
-df.set_index(date_col, inplace=True)
-daily = df.resample('D').first().dropna()
+# 1) CSV 로드
+df = pd.read_csv('data_울산_2024.csv', encoding='cp949')
+
+# 2) 날짜 컬럼 자동 탐색 & 변환
+date_col = None
+for col in df.columns:
+    # 판다스 to_datetime 으로 변환 후 null 비율이 낮으면 날짜로 간주
+    converted = pd.to_datetime(df[col], errors='coerce')
+    non_null_ratio = converted.notna().mean()
+    if non_null_ratio > 0.8:  # 80% 이상이 datetime으로 변환된다면
+        df[col] = converted
+        date_col = col
+        break
+
+if date_col is None:
+    st.error("날짜 컬럼을 찾을 수 없습니다. CSV 파일을 확인해 주세요.")
+    st.stop()
 
 # test_size 조절
 test_size = st.sidebar.slider(
