@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
-from lightgbm import LGBMRegressor
+#from lightgbm import LGBMRegressor
 from sklearn.metrics import r2_score
 import streamlit as st
 if platform.system() == "Darwin":  #
@@ -76,11 +76,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 st.write(f"선택된 test_size = {test_size:.2f}")
 st.write(f"학습 데이터: {len(X_train)}, 테스트 데이터: {len(X_test)}")
 
-#6.모델 학습(XGboost, Random forest, Light GBM) 및 성능(R²) 확인
+#6.모델 학습(XGboost, Random forest) 및 성능(R²) 확인
 models = {
     'RandomForest': RandomForestRegressor(random_state=42),
     'XGBoost': XGBRegressor(random_state=42),
-    'LGBM': LGBMRegressor(random_state=42)
+    #'LGBM': LGBMRegressor(random_state=42)
 }
 
 #7.실제 배수지 탁도 vs 예측 탁도값 비교 그래프 시각화
@@ -98,7 +98,7 @@ for name, y_pred in predictions.items():
     plt.plot(y_pred, label=name)
 plt.legend()
 plt.title('Actual vs Predicted Turbidity')
-plt.xlabel('타임테이블블')
+plt.xlabel('타임테이블')
 plt.ylabel('탁도')
 plt.tight_layout()
 plt.show()
