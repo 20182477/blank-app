@@ -64,7 +64,7 @@ im = ax1.imshow(corr, aspect='auto')
 fig1.colorbar(im, ax=ax1)
 ax1.set_xticks(range(len(corr))); ax1.set_xticklabels(corr.columns, rotation=90)
 ax1.set_yticks(range(len(corr))); ax1.set_yticklabels(corr.columns)
-ax1.set_title("Variable Correlation He프
+ax1.set_title("Variable Correlation Heatmap")
 fig2, ax2 = plt.subplots(figsize=(12, 6))
 ax2.plot(y_test.values, label='Actual', marker='o')
 for name, y_pred in preds.items():
