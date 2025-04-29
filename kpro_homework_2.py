@@ -11,15 +11,12 @@ import streamlit as st
 import matplotlib.font_manager as fm
 import platform
 
-FONT_PATH = os.path.join(os.path.dirname(__file__), 'fonts', 'NanumGothic.ttf')
-if not os.path.exists(FONT_PATH):
-    raise FileNotFoundError(f"한글 폰트 파일을 찾을 수 없습니다: {FONT_PATH}")
-
-#matplotlib에 폰트 등록 및 기본 폰트로 설정
+script_dir = os.path.dirname(os.path.abspath(__file__))
+FONT_PATH = os.path.join(script_dir, 'NanumGothic.ttf')
 fm.fontManager.addfont(FONT_PATH)
 font_name = fm.FontProperties(fname=FONT_PATH).get_name()
 plt.rcParams['font.family'] = font_name
-plt.rcParams['axes.unicode_minus'] = False  # 음수 기호 깨짐 방지
+plt.rcParams['axes.unicode_minus'] = False
 
 #2. 데이터 호출 및 일데이터 추출, 프레임화
 df = pd.read_csv('data_울산_2024.csv', encoding="cp949")
