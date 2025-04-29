@@ -7,6 +7,8 @@ from xgboost import XGBRegressor
 #from lightgbm import LGBMRegressor
 from sklearn.metrics import r2_score
 import streamlit as st
+import platform
+
 if platform.system() == "Darwin":  #
     plt.rc("font", family="AppleGothic")
 else:
