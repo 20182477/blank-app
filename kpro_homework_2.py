@@ -47,18 +47,21 @@ df.set_index(date_col, inplace=True)
 daily = df.resample('D').first()
 print(daily)
 
-#3. 결측치 제거
+#3.일별(00:00) 리샘플링 및 결측 제거
+daily = df.resample('D').first()
 daily_clean = daily.dropna()
 print(daily_clean)
 
-#4. Correalation Heatmap
+#4.히트맵 그리기 (matplotlib만 사용)
 corr = daily_clean.corr()
-plt.figure(figsize=(12, 10))
-plt.imshow(corr, aspect='auto')
-plt.colorbar()
-plt.xticks(range(len(corr)), corr.columns, rotation=90)
-plt.yticks(range(len(corr)), corr.columns)
-plt.title('Variable Correlation Heatmap')
+fig, ax = plt.subplots(figsize=(12, 10))
+im = ax.imshow(corr, aspect='auto')        # imshow 반환값 저장
+cbar = fig.colorbar(im, ax=ax)             # fig.colorbar에 im과 ax 지정
+ax.set_xticks(range(len(corr)))
+ax.set_xticklabels(corr.columns, rotation=90)
+ax.set_yticks(range(len(corr)))
+ax.set_yticklabels(corr.columns)
+ax.set_title('Variable Correlation Heatmap')
 plt.tight_layout()
 plt.show()
 
