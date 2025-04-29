@@ -34,7 +34,7 @@ daily_clean = df.resample('D').first().dropna()
 st.write("일별 리샘플링 후 데이터", daily_clean.shape)
 
 #4. 타겟 데이터 확인
-turb_cols = [c for c in daily_clean.columns if '탁도' in c]
+turb_cols = [c for c in daily_clean.columns if '배수지 탁도' in c]
 if not turb_cols:
     st.error("탁도 컬럼을 찾을 수 없습니다.")
     st.stop()
