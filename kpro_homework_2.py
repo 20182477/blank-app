@@ -2,7 +2,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 #from lightgbm import LGBMRegressor
@@ -19,8 +19,10 @@ plt.rcParams['font.family'] = font_name
 plt.rcParams['axes.unicode_minus'] = False
 
 #2. 데이터 호출 및 일데이터 추출, 프레임화
-df = pd.read_csv('data_울산_2024.csv', encoding="cp949")
-print(df)
+df = pd.read_csv('data_울산_2024.csv', encoding='cp949', parse_dates=True)
+date_col = next(c for c in df.columns if pd.api.types.is_datetime64_any_dtype(df[c]))
+df.set_index(date_col, inplace=True)
+daily = df.resample('D').first().dropna()
 
 # 자동으로 날짜 컬럼 찾기
 date_col = None
@@ -57,6 +59,7 @@ ax.set_yticklabels(corr.columns)
 ax.set_title('Variable Correlation Heatmap')
 plt.tight_layout()
 plt.show()
+st.pyplot(fig1) 
 
 #5. 학습 데이터셋 준비
 target = '울산권_온산(정) 배수지 탁도'
@@ -101,3 +104,4 @@ plt.xlabel('타임테이블')
 plt.ylabel('탁도')
 plt.tight_layout()
 plt.show()
+st.pyplot(fig2) 
