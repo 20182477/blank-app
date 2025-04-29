@@ -1,3 +1,4 @@
+#1. 패키지 호출
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -5,10 +6,10 @@ from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
 from sklearn.metrics import r2_score
-import streamlit
+import streamlit as st
 plt.rcParams['font.family'] = 'Malgun Gothic' 
 
-
+#2. 데이터 호출 및 일데이터 추출, 프레임화
 df = pd.read_csv('data_울산_2024.csv', encoding="cp949")
 
 # 자동으로 날짜 컬럼 찾기
@@ -28,8 +29,10 @@ df.set_index(date_col, inplace=True)
 
 daily = df.resample('D').first()
 
+#3. 결측치 제거
 daily_clean = daily.dropna()
 
+#4. Correalation Heatmap
 corr = daily_clean.corr()
 plt.figure(figsize=(12, 10))
 plt.imshow(corr, aspect='auto')
@@ -40,20 +43,31 @@ plt.title('Variable Correlation Heatmap')
 plt.tight_layout()
 plt.show()
 
+#5. 학습 데이터셋 준비
 target = '울산권_온산(정) 배수지 탁도'
 X = daily_clean.drop(columns=[target])
 y = daily_clean[target]
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+test_size = st.sidebar.slider(
+    '테스트 세트 비율(test_size)', 
+    min_value=0.1, 
+    max_value=0.5, 
+    value=0.2, 
+    step=0.05
 )
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=test_size, random_state=42
+)
+st.write(f"선택된 test_size = {test_size:.2f}")
+st.write(f"학습 데이터: {len(X_train)}, 테스트 데이터: {len(X_test)}")
 
+#6.모델 학습(XGboost, Random forest, Light GBM) 및 성능(R²) 확인
 models = {
     'RandomForest': RandomForestRegressor(random_state=42),
     'XGBoost': XGBRegressor(random_state=42),
     'LGBM': LGBMRegressor(random_state=42)
 }
 
+#7.실제 배수지 탁도 vs 예측 탁도값 비교 그래프 시각화
 predictions = {}
 for name, model in models.items():
     model.fit(X_train, y_train)
