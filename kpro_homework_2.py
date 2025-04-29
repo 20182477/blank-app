@@ -44,7 +44,7 @@ st.write(f"**타겟 컬럼**: `{target}`")
 #5.테스트세트 슬라이더 생성 및 학습데이터 분할
 test_size = st.sidebar.slider(
     '테스트 세트 비율', 
-    min_value=0.1, max_value=0.5, value=0.2, step=0.05)
+    min_value=0.1, max_value=0.5, value=0.15, step=0.05)
 X = daily_clean.drop(columns=[target])
 y = daily_clean[target]
 X_train, X_test, y_train, y_test = train_test_split(
