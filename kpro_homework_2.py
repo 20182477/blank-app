@@ -1,4 +1,4 @@
-#1. 패키지 호출
+'''#1. 패키지 호출
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -104,4 +104,67 @@ plt.xlabel('타임테이블')
 plt.ylabel('탁도')
 plt.tight_layout()
 plt.show()
+st.pyplot(fig2)'''
+
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
+from lightgbm import LGBMRegressor
+from sklearn.metrics import r2_score
+
+st.title("울산 탁도 예측 대시보드")
+
+# 데이터 로드 & 전처리
+df = pd.read_csv('data_울산_2024.csv', encoding='cp949', parse_dates=True)
+date_col = next(c for c in df.columns if pd.api.types.is_datetime64_any_dtype(df[c]))
+df.set_index(date_col, inplace=True)
+daily = df.resample('D').first().dropna()
+
+# test_size 조절
+test_size = st.sidebar.slider(
+    '테스트 세트 비율', 0.1, 0.5, 0.2, step=0.05
+)
+X = daily.drop(columns=['울산권_온산(정) 배수지 탁도'])
+y = daily['울산권_온산(정) 배수지 탁도']
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=test_size, random_state=42
+)
+st.write(f"학습 샘플: {len(X_train)}, 테스트 샘플: {len(X_test)}")
+
+# 1) 히트맵 그리기
+corr = daily.corr()
+fig1, ax1 = plt.subplots(figsize=(12,10))
+im = ax1.imshow(corr, aspect='auto')
+fig1.colorbar(im, ax=ax1)
+ax1.set_xticks(range(len(corr))); ax1.set_xticklabels(corr.columns, rotation=90)
+ax1.set_yticks(range(len(corr))); ax1.set_yticklabels(corr.columns)
+ax1.set_title("Variable Correlation Heatmap")
+st.pyplot(fig1)   # ← 여기!
+
+# 2) 모델 정의·학습·예측
+models = {
+    'RF': RandomForestRegressor(random_state=42),
+    'XGB': XGBRegressor(random_state=42),
+    'LGBM': LGBMRegressor(
+        num_leaves=64, max_depth=10, min_data_in_leaf=10,
+        learning_rate=0.1, n_estimators=200, random_state=42
+    )
+}
+preds = {}
+for name, m in models.items():
+    m.fit(X_train, y_train)
+    y_pred = m.predict(X_test)
+    preds[name] = y_pred
+    st.write(f"{name} R²: {r2_score(y_test, y_pred):.4f}")
+
+# 3) 실제 vs 예측 그래프
+fig2, ax2 = plt.subplots(figsize=(12,6))
+ax2.plot(y_test.values, label='Actual', marker='o')
+for name, y_pred in preds.items():
+    ax2.plot(y_pred, label=name, marker='x')
+ax2.legend(); ax2.set_title("Actual vs Predicted Turbidity")
+ax2.set_xlabel("샘플 인덱스"); ax2.set_ylabel("탁도")
 st.pyplot(fig2) 
