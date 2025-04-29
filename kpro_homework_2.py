@@ -11,7 +11,7 @@ import streamlit as st
 import matplotlib.font_manager as fm
 import platform
 
-FONT_PATH = os.path.join(os.path.dirname(__file__), 'fonts', 'NanumGothic.ttf')
+FONT_PATH = os.path.join(os.path.dirname(__file__), 'NanumGothic.ttf')
 if not os.path.exists(FONT_PATH):
     raise FileNotFoundError(f"한글 폰트 파일을 찾을 수 없습니다: {FONT_PATH}")
 
