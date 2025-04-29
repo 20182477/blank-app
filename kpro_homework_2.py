@@ -67,7 +67,7 @@ st.pyplot(fig1)
 models = {
     'RandomForest': RandomForestRegressor(random_state=42),
     'XGBoost': XGBRegressor(random_state=42),
-    #'LGBM': LGBMRegressor(
+    'LGBM': LGBMRegressor(
         num_leaves=64,
         max_depth=10,
         min_data_in_leaf=10,
