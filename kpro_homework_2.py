@@ -7,10 +7,10 @@ from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
 from sklearn.metrics import r2_score
 import streamlit as st
-plt.rcParams['font.family'] = 'Malgun Gothic' 
 
 #2. 데이터 호출 및 일데이터 추출, 프레임화
 df = pd.read_csv('data_울산_2024.csv', encoding="cp949")
+print(df)
 
 # 자동으로 날짜 컬럼 찾기
 date_col = None
@@ -28,9 +28,11 @@ if date_col is None:
 df.set_index(date_col, inplace=True)
 
 daily = df.resample('D').first()
+print(daily)
 
 #3. 결측치 제거
 daily_clean = daily.dropna()
+print(daily_clean)
 
 #4. Correalation Heatmap
 corr = daily_clean.corr()
