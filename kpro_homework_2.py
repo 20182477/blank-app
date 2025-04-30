@@ -11,7 +11,7 @@ from sklearn.metrics import r2_score
 import matplotlib.font_manager as fm
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-FONT_PATH = os.path.join(script_dir, 'NanumGothic(1).ttf')
+FONT_PATH = os.path.join(script_dir, 'NanumGothic (1).ttf')
 fm.fontManager.addfont(FONT_PATH)
 font_name = fm.FontProperties(fname=FONT_PATH).get_name()
 plt.rcParams['font.family'] = font_name
