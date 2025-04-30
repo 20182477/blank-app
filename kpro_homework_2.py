@@ -8,6 +8,12 @@ from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
 from sklearn.metrics import r2_score
+script_dir = os.path.dirname(os.path.abspath(__file__))
+FONT_PATH = os.path.join(script_dir, 'NanumGothic(1).ttf')
+fm.fontManager.addfont(FONT_PATH)
+font_name = fm.FontProperties(fname=FONT_PATH).get_name()
+plt.rcParams['font.family'] = font_name
+plt.rcParams['axes.unicode_minus'] = False
 
 st.title("울산 탁도 예측 대시보드")
 
